@@ -21,8 +21,8 @@ public class EnemyPathfinding : MonoBehaviour
     }
 
 
-    public void MoveTo(Vector2 movement)
+    public void MoveTo(Vector2 targetPosition)
     {
-        _movementDirection = movement;
+        _movementDirection = targetPosition;
     }
 }

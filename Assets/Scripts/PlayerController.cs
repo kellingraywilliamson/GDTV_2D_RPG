@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private static readonly int MoveY = Animator.StringToHash("moveY");
+    private static readonly int MoveX = Animator.StringToHash("moveX");
     [SerializeField] private float moveSpeed = 1f;
 
     private PlayerControls _playerControls;
@@ -12,8 +11,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-    private static readonly int MoveY = Animator.StringToHash("moveY");
-    private static readonly int MoveX = Animator.StringToHash("moveX");
+    private Camera _camera;
+
+    public bool FacingLeft { get; set; }
 
     private void Awake()
     {
@@ -23,14 +23,9 @@ public class PlayerController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        _playerControls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _playerControls.Disable();
+        _camera = Camera.main;
     }
 
     private void Update()
@@ -42,6 +37,16 @@ public class PlayerController : MonoBehaviour
     {
         AdjustPlayerDirection();
         Move();
+    }
+
+    private void OnEnable()
+    {
+        _playerControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerControls.Disable();
     }
 
     private void PlayerInput()
@@ -58,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
     private void AdjustPlayerDirection()
     {
-        _spriteRenderer.flipX = Input.mousePosition.x < Camera.main.WorldToScreenPoint(transform.position).x;
+        FacingLeft = Input.mousePosition.x < _camera.WorldToScreenPoint(transform.position).x;
+        _spriteRenderer.flipX = FacingLeft;
     }
 }
